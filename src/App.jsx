@@ -1,25 +1,16 @@
-// src/App.jsx
 import React, { useState } from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
-import { styleReset, List, ListItem, Divider } from 'react95';
+import { styleReset, List, ListItem, Divider, AppBar, Toolbar, Button, Window, WindowHeader, WindowContent } from 'react95';
 // 引入 Windows 95 原始主题
 import original from 'react95/dist/themes/original'; 
-// 引入字体
-import ms_sans_serif from 'react95-original';
 
-import { AppBar, Toolbar, Button, Window, WindowHeader, WindowContent } from 'react95';
-
-// 1. 全局样式重置（设为灰色背景，强制使用像素字体）
+// 1. 全局样式重置
+// 我们暂时去掉 ms_sans_serif 的强制引用，改用系统默认字体，效果也非常接近
 const GlobalStyles = createGlobalStyle`
   ${styleReset}
-  @font-face {
-    font-family: 'ms_sans_serif';
-    src: url('${ms_sans_serif}') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-  }
   body {
-    font-family: 'ms_sans_serif';
+    /* 使用像素化字体或系统默认无衬线字体 */
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif; 
     background-color: teal; /* 经典的 Windows 95 蓝绿色背景 */
     overflow: hidden; /* 禁止页面滚动，模拟桌面 */
   }
@@ -41,12 +32,12 @@ function App() {
       <GlobalStyles />
       <ThemeProvider theme={original}>
         
-        {/* 桌面区域：这里可以放图标 */}
+        {/* 桌面区域 */}
         <div style={{ height: 'calc(100vh - 50px)', padding: '20px', position: 'relative' }}>
           
-          {/* 这里是打开的文章窗口 */}
+          {/* 打开的文章窗口 */}
           {activePost && (
-            <Window style={{ width: 400, position: 'absolute', top: '20%', left: '30%' }} className='window'>
+            <Window style={{ width: 400, position: 'absolute', top: '20%', left: '30%', zIndex: 10 }} className='window'>
               <WindowHeader style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <span>{activePost.title}</span>
                 <Button onClick={() => setActivePost(null)} size={'sm'} square>
@@ -62,12 +53,12 @@ function App() {
           {/* 桌面图标示例 */}
           <div style={{ textAlign: 'center', width: 80, cursor: 'pointer' }} onClick={() => setActivePost(posts[1])}>
             <span style={{ fontSize: '40px' }}>💻</span>
-            <p style={{ color: 'white', textShadow: '1px 1px black' }}>我的电脑</p>
+            <p style={{ color: 'white', textShadow: '1px 1px black', marginTop: '5px' }}>我的电脑</p>
           </div>
         </div>
 
         {/* 底部任务栏 */}
-        <AppBar position='fixed' style={{ top: 'auto', bottom: 0 }}>
+        <AppBar position='fixed' style={{ top: 'auto', bottom: 0, zIndex: 999 }}>
           <Toolbar style={{ justifyContent: 'space-between' }}>
             <div style={{ position: 'relative', display: 'inline-block' }}>
               <Button 
@@ -75,11 +66,7 @@ function App() {
                 active={startMenuOpen} 
                 style={{ fontWeight: 'bold' }}
               >
-                <img 
-                    src="https://win98icons.alexmeub.com/icons/png/windows-0.png" 
-                    alt="logo" 
-                    style={{ height: '20px', marginRight: 4 }} 
-                />
+                <span role="img" aria-label="start" style={{ marginRight: 4 }}>🏁</span>
                 Start
               </Button>
               
